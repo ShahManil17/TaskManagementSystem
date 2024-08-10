@@ -1,0 +1,234 @@
+﻿@model TaskManagementSystem.Core.DTOs.AddTaskModel;
+@{
+    ViewData["Title"] = "AddTask";
+    string title = ViewBag.TaskData != null ? "Edit Task" : "Create Task";
+}
+
+<h1 class="container text-center mt-2 mb-5" style="color:blueviolet">@title</h1>
+
+<div asp-validation-summary="All" class="text-danger text-center" role="alert"></div>
+@{
+    string action = ViewBag.TaskData!=null ? "editTask" : "assignTasks";
+}
+<form asp-action="@action" asp-controller="Services" method="post" id="form">
+    <div class="container row mt-2">
+        <div class="col-md" hidden>
+            @{
+                int? id = ViewBag.TaskData!=null ? ViewBag.TaskData.Id : null;
+            }
+            <input asp-for="Id" value="@id" />
+        </div>
+        <div class="col-md text-start">
+            @{
+                string? taskName = ViewBag.TaskData != null ? ViewBag.TaskData.TaskName : null;
+            }
+            <label for="TaskName" class="text-primary text-start">Task Name</label>
+            <input asp-for="TaskName" id="TaskName" placeholder="Task Name" class="form-control" value="@taskName" />
+        </div>
+        <div class="col-md text-start">
+            @if (ViewBag.TaskData != null)
+            {
+                <input type="number" id="subTaskValue" value="@ViewBag.TaskData.HasSubTask" disabled hidden />
+            }
+            <label for="subTask" class="text-primary text-s tart">Has SubTask</label>
+            <select asp-for="HasSubTask" id="subTask" class="form-control" onchange="displaySubTask()">
+                <option value="1">Yes</option>
+                <option value="0" selected>No</option>
+            </select>
+        </div>
+        @if (ViewBag.TaskData != null)
+        {
+            <div class="col-md text-start">
+                <label for="taskStatus" class="text-primary text-s tart">Task Status</label>
+                <select asp-for="Status" id="taskStatus" class="form-control" value="@ViewBag.Taskdata.Status">
+                    <option value="todo">Todo</option>
+                    <option value="in-progress">In-Progress</option>
+                    <option value="bug">Bug</option>
+                    <option value="error">Error</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+        }
+    </div>
+
+    <div id="subTaskParent" class="container row" hidden>
+        <div id="subtaskView">
+            <div class="row mt-2" id="copy" style="visibility:hidden">
+                <input class="form-control" hidden />
+                <div class="col-md">
+                    <input placeholder="SubTask Name" class="form-control" />
+                </div>
+                <div class="col-md">
+                    <select class="form-control">
+                        <option value="todo">Todo</option>
+                        <option value="in-progress">In-Progress</option>
+                        <option value="bug">Bug</option>
+                        <option value="error">Error</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+            @if (ViewBag.TaskData == null)
+            {
+                <div class="row mt-2" id="copy">
+                    <div class="col-md">
+                        <input asp-for="SubTasks[0].Name" placeholder="SubTask Name" class="form-control" />
+                    </div>
+                    <div class="col-md">
+                        <select asp-for="SubTasks[0].Status" class="form-control">
+                            <option value="todo">Todo</option>
+                            <option value="in-progress">In-Progress</option>
+                            <option value="bug">Bug</option>
+                            <option value="error">Error</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+            }
+            else if(ViewBag.Taskdata.SubTasks != null)
+            {
+                int counter = 0;
+                @foreach(var item in ViewBag.TaskData.SubTasks)
+                {
+                    <div class="existingSubTasks row mt-2" id="@item.Id">
+                        <input type="text" class="statusValue" value="@item.Status" hidden/>
+                        <div class="col-md">
+                            <input asp-for="SubTasks[counter].Id" value="@item.Id" hidden />
+                            <input asp-for="SubTasks[counter].Name" placeholder="SubTask Name" class="form-control" value="@item.Name" />
+                        </div>
+                        <div class="col-md">
+                            <select asp-for="SubTasks[counter].Status" id="SubTasks[@counter].Status" class="form-control">
+                                <option value="todo">Todo</option>
+                                <option value="in-progress">In-Progress</option>
+                                <option value="bug">Bug</option>
+                                <option value="error">Error</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="col-md">
+                            <input type="button" class="btn btn-danger" value="Remove" onclick="removeEle(@item.Id)" />
+                        </div>
+                    </div>
+                    counter++;
+                }
+            }
+        </div>
+        <div class="row mt-4">
+            <div class="col-md"></div>
+            <div class="col-md">
+                <input type="button" value="ADD SubTask" class="btn btn-outline-primary" onclick="addSubTask()" />
+            </div>
+            <div class="col-md"></div>
+        </div>
+    </div>
+
+    <div class="container row" hidden>
+        <div class="col-md">
+            <select asp-for="Status" class="form-control">
+                <option value="todo">Todo</option>
+                <option value="in-progress">In-Progress</option>
+                <option value="bug">Bug</option>
+                <option value="error">Error</option>
+                <option value="completed">Completed</option>
+            </select>
+        </div>
+        <div class="col-md"></div>
+    </div>
+
+    <div class="container row mt-5">
+        <div class="col-md-5"></div>
+        <div class="col-md-2">
+            @{
+                string buttonName = ViewBag.TaskData != null ? "CHANGE" : "CREATE";
+            }
+            <input id="newTask-submit" type="submit" class="w-100 btn btn-lg btn-primary" value="@buttonName">
+        </div>
+        <div class="col-md-5"></div>
+    </div>
+</form>
+
+<script>
+    const subValEle = document.getElementById('subTaskValue');
+    const form = document.getElementById('form');
+    let deleteCounter = 0;
+    let subTaskCounter = 0;
+    if (subValEle) {
+        document.getElementById('subTask').value = subValEle.value;
+        subTaskCounter = document.querySelectorAll('.existingSubTasks').length - 1;
+        const statusVals = document.querySelectorAll('.statusValue');
+        let counter = 0;
+        Array.from(statusVals).forEach((ele) => {
+            document.getElementById(`SubTasks[${counter}].Status`).value = ele.value;
+            counter++;
+        });
+    }
+
+    const subTaskEle = document.getElementById('subTaskParent');
+    if (document.getElementById('subTask').value == 1) {
+        subTaskEle.hidden = false;
+    }
+
+    function displaySubTask() {
+        if (document.getElementById('subTask').value == 1) {
+            subTaskEle.hidden = false;
+        }
+        else {
+            subTaskEle.hidden = true;
+        }
+    }
+
+    function addSubTask() {
+        subTaskCounter++;
+        let copyDiv = document.getElementById("copy");
+        let cloneNode = copyDiv.cloneNode(true);
+        let ele = document.getElementById("subtaskView").appendChild(cloneNode);
+        ele.style.visibility = 'visible';
+        Array.from(ele.children).forEach((ele, index) => {
+            if (ele.children[0]) {
+                if (index == 1) {
+                    ele.children[0].name = `SubTasks[${subTaskCounter}].Name`;
+                    ele.children[0].value = null;
+                }
+                else {
+                    ele.children[0].name = `SubTasks[${subTaskCounter}].Status`;
+                    ele.children[0].value = 'todo';
+                }
+            }
+        });
+    }
+
+    function removeEle(id) {
+        subTaskCounter--;
+        console.log(subTaskCounter);
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'DeleteIds';
+        input.value = id;
+        form.appendChild(input);
+        
+        deleteCounter++;
+        document.getElementById(`${id}`).remove();
+        const rename = document.querySelector('#subtaskView').children;
+        let renameCounter = 0;
+        Array.from(rename).forEach((ele) => {
+            if(ele.id == 'copy') {
+                if (renameCounter != 0) {
+                    ele.children[0].name = `SubTasks[${renameCounter - 1}].Id`;
+                    ele.children[1].children[0].name = `SubTasks[${renameCounter - 1}].Name`;
+                    ele.children[2].children[0].name = `SubTasks[${renameCounter - 1}].Status`;
+                }
+            }
+            else {
+                console.log("else maa");
+                if (renameCounter != 0) {
+                    ele.children[1].children[0].name = `SubTasks[${renameCounter - 1}].Id`;
+                    ele.children[1].children[2].name = `SubTasks[${renameCounter - 1}].Name`;
+                    ele.children[2].children[0].name = `SubTasks[${renameCounter - 1}].Status`;
+                }
+                console.log(ele);
+            }
+            
+            renameCounter++;
+        });
+    }
+</script>

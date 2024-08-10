@@ -1,0 +1,14 @@
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\bin\Debug\net8.0\TaskManagementSystem.Data.deps.json
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\bin\Debug\net8.0\TaskManagementSystem.Data.runtimeconfig.json
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\bin\Debug\net8.0\TaskManagementSystem.Data.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\bin\Debug\net8.0\TaskManagementSystem.Data.pdb
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\obj\Debug\net8.0\TaskManagementSystem.Data.csproj.AssemblyReference.cache
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\obj\Debug\net8.0\TaskManagementSystem.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\obj\Debug\net8.0\TaskManagementSystem.Data.AssemblyInfoInputs.cache
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\obj\Debug\net8.0\TaskManagementSystem.Data.AssemblyInfo.cs
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\obj\Debug\net8.0\TaskManagementSystem.Data.csproj.CoreCompileInputs.cache
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\obj\Debug\net8.0\TaskManagementSystem.Data.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\obj\Debug\net8.0\refint\TaskManagementSystem.Data.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\obj\Debug\net8.0\TaskManagementSystem.Data.pdb
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\obj\Debug\net8.0\TaskManagementSystem.Data.genruntimeconfig.cache
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Data\obj\Debug\net8.0\ref\TaskManagementSystem.Data.dll

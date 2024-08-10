@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewData["Title"] = "AssignUsers";
+}
+
+<h1 class="container text-center mt-2 mb-5" style="color:blueviolet">Assign Users</h1>
+
+<div asp-validation-summary="All" class="text-danger text-center" role="alert"></div>
+<div class="container " style="width:100%; display:flex; flex-wrap: wrap">
+    @if (ViewBag.AllTasks != null && ViewBag.AllTasks.Count > 0)
+    {
+        @foreach (var item in ViewBag.AllTasks)
+        {
+            <div style="width:400px" class="me-4">
+                <div class="card mt-4">
+                    <div class="card-header">
+                        @item.Status
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">@item.TaskName</h5>
+                        <p class="card-text">
+                            @if (item.HasSubTask == 0)
+                            {
+                                <span><b>Has SubTask : </b>No</span>
+                            }
+                            else
+                            {
+                                <span><b>Has SubTask : </b>Yes</span>
+                            }
+                        </p>
+                        <a asp-action="assignUsers" asp-controller="Services" asp-route-id="@item.Id" asp-route-level="task" asp-route-hasSubTask="@item.HasSubTask" class="btn btn-primary">Edit Task</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else if (ViewBag.SubTaskData != null && ViewBag.SubTaskData.Count > 0)
+    {
+        @foreach (var item in ViewBag.SubTaskData)
+        {
+            <div style="width:400px" class="me-4">
+                <div class="card mt-4">
+                    <div class="card-header">
+                        @item.Status
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title mb-3">@item.Name</h4>
+                        <a asp-action="assignUsers" asp-controller="Services" asp-route-id="@item.Id" asp-route-level="subTask" class="btn btn-primary">Assign Users</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@if (ViewBag.UserDetails != null && ViewBag.UserDetails.Count > 0)
+{
+    @foreach (var item in ViewBag.UserDetails)
+    {
+        <div class="row mb-4" style="align-items:center">
+            <div class="col-md-10 text-center" style="font-size: 32px">
+                @item.UserName
+            </div>
+            <div class="col-md-2 text-center " id="buttons">
+                @if (item.InTask == null)
+                { 
+                    <input type="button" value="ADD" class="btn btn-primary" onclick="add(@item.Id, this)" />
+                }
+                else
+                {
+                    <input type="button" value="Remove" class="btn btn-danger" onclick="remove(@item.InTask[0].Id, this)" />
+                }
+            </div>
+        </div>
+    }
+}
+
+
+
+<form asp-action="assignUsers" asp-controller="Services" method="post" id="form">
+    
+</form>
+
+<script>
+    async function add(id, element) {
+        const url = new URLSearchParams(window.location.search);
+        const taskId = url.get('id');
+        let insertResponse = await fetch(`/Api/updateUser?taskId=${taskId}&userId=${id}`);
+        let result = await insertResponse.json();
+        if(!result.isSuccess) {
+            alert(result.errorMessage);
+        }
+        else {
+            element.parentElement.innerHTML = `<input type="button" value="Remove" class="btn btn-danger" onclick="remove(${result.result.id}, this)" />`;
+            alert(`User Added Succesfully`);
+        }
+    }
+    async function remove(id, element) {
+        let removeResponse = await fetch(`/Api/updateUser?taskId=${id}`);
+        let result = await removeResponse.json();
+        if (!result.isSuccess) {
+            alert(result.errorMessage);
+        }
+        else {
+            element.parentElement.innerHTML = `<input type="button" value="ADD" class="btn btn-primary" onclick="add(${result.result.userId}, this)" />`;
+            alert(`User Removed Succesfully`);
+        }
+    }
+</script>

@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewData["Title"] = "ReqToChangeStatus";
+}
+
+<h1 class="container text-center mt-2 mb-5" style="color:blueviolet">Request To Change Status</h1>
+
+<div asp-validation-summary="All" class="text-danger text-center" role="alert"></div>
+
+<div class="container " style="width:100%; display:flex; flex-wrap: wrap">
+    @if (ViewBag.SubTasks != null)
+    {
+        foreach (var item in ViewBag.SubTasks)
+        {
+            <div style="width:400px" class="me-4">
+                <div class="card mt-4">
+                    <div class="card-header">
+                        @item.Status
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">@item.Name</h5>
+                        <a asp-action="reqToChangeStatus" asp-controller="Services" asp-route-subId="@item.Id" class="btn btn-primary">Change Status</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@if (ViewBag.Status != null)
+{
+    <form asp-action="" asp-controller="">
+        <input type="hidden" id="subStatus" value="@ViewBag.Status"/>
+        <input type="number" name="subId" id="subId" value="@ViewBag.subId" hidden/>
+        <div class="row mb-5">
+            <div class="col"></div>
+            <div class="col">
+                <select name="Status" class="form-control">
+                    <option value="todo" id="todo">Todo</option>
+                    <option value="in-progress" id="in-progress">In-Progress</option>
+                    <option value="bug" id="bug">Bug</option>
+                    <option value="error" id="error">Error</option>
+                    <option value="completed" id="completed">Completed</option>
+                </select>
+            </div>
+            <div class="col"></div>
+        </div>
+        <div class="text-center">
+            <input type="submit" class="btn btn-primary" value="Send Request" />
+        </div>
+    </form>
+}
+
+<script>
+    document.getElementById(`${document.getElementById('subStatus').value}`).selected = true;
+</script>

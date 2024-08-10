@@ -1,0 +1,61 @@
+﻿@model TaskManagementSystem.Core.DTOs.AssignPermissionModel;
+@{
+    ViewData["Title"] = "AssignPermission";
+}
+
+<h1 class="container text-center mt-2 mb-5" style="color:blueviolet">Assign Permission</h1>
+
+<div asp-validation-summary="All" class="text-danger text-center" role="alert"></div>
+
+<form asp-action="assignPermissions" asp-controller="Services" method="post">
+    <div class="container row">
+        <div class="col-md">
+            @if (ViewBag.Roles != null && ViewBag.Roles.Count > 0)
+            {
+                <select asp-for="RoleId" class="form-control" id="role" onchange="selectPermissions()">
+                    <option selected disabled>-Select Role-</option>
+                    @foreach(var item in ViewBag.Roles)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            }
+        </div>
+        <div class="col-md">
+            @if (ViewBag.AllPermissions != null && ViewBag.AllPermissions.Count > 0)
+            {
+                <select name="Permissions" class="form-control" id="permissions" multiple disabled>
+                    @foreach (var item in ViewBag.AllPermissions)
+                    {
+                        <option value="@item.Id" id="@item.Id">@item.Name</option>
+                    }
+                </select>
+            }
+        </div>
+    </div>
+
+    <div class="container row mt-5">
+        <div class="col-md-5"></div>
+        <div class="col-md-2">
+            <input id="permission-submit" type="submit" class="w-100 btn btn-lg btn-primary" value="ASSIGN">
+        </div>
+        <div class="col-md-5"></div>
+    </div>
+</form>
+
+<script>
+    const permissionsEle = document.getElementById('permissions');
+    if (document.getElementById('role').value != '-Select Role-') {
+        permissionsEle.disabled = false;
+    }
+    async function selectPermissions() {
+        permissionsEle.value = null;
+        permissionsEle.disabled = false;
+        let response = await fetch(`/Api/getRoleHasPermissions?roleId=${document.getElementById('role').value}`);
+        let data = await response.json();
+        data.result.forEach((ele) => {
+            document.getElementById(`${ele}`).selected = true;
+        });
+        console.log(data);
+    }
+</script>

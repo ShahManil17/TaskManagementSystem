@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewData["Title"] = "EditTask";
+}
+
+<h1 class="container text-center mt-2 mb-4" style="color:blueviolet">Edit Task</h1>
+
+<div asp-validation-summary="All" class="text-danger text-center" role="alert"></div>
+
+<div class="container " style="width:100%; display:flex; flex-wrap: wrap">
+@if (ViewBag.AllTasks != null && ViewBag.AllTasks.Count > 0)
+{
+    @foreach (var item in ViewBag.AllTasks)
+    {
+        <div style="width:400px" class="me-4">
+            <div class="card mt-4">
+                <div class="card-header">
+                    @item.Status
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@item.TaskName</h5>
+                    <p class="card-text">
+                        @if (item.HasSubTask == 0)
+                        {
+                            <span><b>Has SubTask : </b>No</span>
+                        }
+                        else
+                        {
+                            <span><b>Has SubTask : </b>Yes</span>
+                        }
+                    </p>
+                    <a asp-action="editTask" asp-controller="Services" asp-route-id="@item.Id" class="btn btn-primary">Edit Task</a>
+                </div>
+            </div>
+        </div>
+    }
+} 
+</div>

@@ -1,0 +1,38 @@
+﻿@model TaskManagementSystem.Core.DTOs.AddUserModel;
+@{
+    ViewData["Title"] = "AddUsers";
+}
+
+<h1 class="container text-center" style="color:blueviolet">Add Users</h1>
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <form asp-action="addUsers" asp-controller="Services" method="post">
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3 mt-5">
+                <input asp-for="UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="UserName" class="form-label">User Name</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" name="Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                <label asp-for="Password" class="form-label">Password</label>
+            </div>
+            <div class="mb-3">
+                <select asp-for="RoleId" class="form-control">
+                    <option selected disabled>-Select Role-</option>
+                    @if (ViewBag.Roles != null && ViewBag.Roles.Count > 0)
+                    {
+                        @foreach (var item in ViewBag.Roles)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div>
+                <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">ADD</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3"></div>
+</div>

@@ -1,0 +1,56 @@
+﻿@model TaskManagementSystem.Core.DTOs.AssignRoleModel;
+@{
+    ViewData["Title"] = "AssignRoles";
+}
+
+<h1 class="container text-center mt-2 mb-5" style="color:blueviolet">Assign Roles</h1>
+
+<div asp-validation-summary="All" class="text-danger text-center" style="width:100%" role="alert"></div>
+<form asp-action="assignRoles" asp-controller="Services" method="post">
+    <div class="row container">
+        <div class="col-md">
+            <select asp-for="UserId" class="form-control" id="user" onchange="getRole()">
+                @if(ViewBag.Users != null && ViewBag.Users.Count > 0)
+                {
+                    <option selected disabled>-Select User-</option>
+                    @foreach(var item in ViewBag.Users)
+                    {
+                        <option value="@item.Id">@item.UserName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md">
+            <select asp-for="RoleId" class="form-control" id="role" disabled="true">
+            @if (ViewBag.Roles != null && ViewBag.Roles.Count > 0)
+            {
+                <option selected disabled>-Select Role-</option>
+                @foreach (var item in ViewBag.Roles)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            }
+            </select>
+        </div>
+    </div>
+    <div class="container row mt-5">
+        <div class="col-md-5"></div>
+        <div class="col-md-2">
+            <input id="assign-submit" type="submit" class="w-100 btn btn-lg btn-primary" value="ASSIGN">
+        </div>
+        <div class="col-md-5"></div>
+    </div>
+</form>
+
+<script>
+    if (document.getElementById('user').value != '-Select User-') {
+        document.getElementById('role').disabled = false;
+    }
+    async function getRole() {
+        const roleEle = document.getElementById('role');
+        roleEle.disabled = false;
+        let response = await fetch(`/Api/getRoleId?userId=${document.getElementById('user').value}`);
+        let data = await response.json();
+        roleEle.value = data.result;
+    }
+</script>

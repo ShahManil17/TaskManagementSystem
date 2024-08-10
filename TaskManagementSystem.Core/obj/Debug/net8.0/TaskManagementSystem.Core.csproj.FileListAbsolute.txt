@@ -1,0 +1,17 @@
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\bin\Debug\net8.0\TaskManagementSystem.Core.deps.json
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\bin\Debug\net8.0\TaskManagementSystem.Core.runtimeconfig.json
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\bin\Debug\net8.0\TaskManagementSystem.Core.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\bin\Debug\net8.0\TaskManagementSystem.Core.pdb
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\bin\Debug\net8.0\TaskManagementSystem.Data.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\bin\Debug\net8.0\TaskManagementSystem.Data.pdb
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.csproj.AssemblyReference.cache
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.AssemblyInfoInputs.cache
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.AssemblyInfo.cs
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.csproj.CoreCompileInputs.cache
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskMana.3F50EA38.Up2Date
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\refint\TaskManagementSystem.Core.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.pdb
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.genruntimeconfig.cache
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\ref\TaskManagementSystem.Core.dll
