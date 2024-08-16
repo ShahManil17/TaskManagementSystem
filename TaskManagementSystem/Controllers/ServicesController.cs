@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Packaging.Signing;
-using System.Collections.Generic;
 using TaskManagementSystem.Core.DTOs;
 using TaskManagementSystem.Core.Repositories.AdminServices;
 using TaskManagementSystem.Core.Repositories.ManagerServices;
+using TaskManagementSystem.Core.Repositories.QAServices;
+using TaskManagementSystem.Core.Repositories.UserServices;
 using TaskManagementSystem.Core.ResponseModels;
 using TaskManagementSystem.Data.DataModels;
 
@@ -15,11 +15,15 @@ namespace TaskManagementSystem.Controllers
     {
         private readonly IAdmin _admin;
         private readonly IManager _manager;
+        private readonly IUser _user;
+        private readonly IQA _qa;
         private readonly IHttpContextAccessor _contextAccesor;
-        public ServicesController(IAdmin admin, IManager manager, IHttpContextAccessor contextAccesor)
+        public ServicesController(IAdmin admin, IManager manager, IUser user, IQA qa, IHttpContextAccessor contextAccesor)
         {
             _admin = admin;
             _manager = manager;
+            _user = user;
+            _qa = qa;
             _contextAccesor = contextAccesor;
         }
 
@@ -62,6 +66,21 @@ namespace TaskManagementSystem.Controllers
             {
                 return View();
             }
+            if(model.Email == null)
+            {
+                ModelState.AddModelError("Message", "Email Address Not Entered!");
+                return View();
+            }
+
+            // Mail Functionlity
+            ReturnObject<string> emailResponse = await _admin.SendEmailAsync(model.Email, "System Credentials", $"Your Username : {model.UserName} AND Password : {model.Password}");
+            if(!emailResponse.IsSuccess)
+            {
+                ModelState.AddModelError("Message", emailResponse.ErrorMessage != null ? emailResponse.ErrorMessage : "Something Went Wrong Sending the Email!");
+                return View();
+            }
+
+            // Add User In The Database
             ReturnObject<Users> insertResponse = await _admin.AddUser(model);
             if(insertResponse.IsSuccess)
             {
@@ -357,8 +376,55 @@ namespace TaskManagementSystem.Controllers
 
         #endregion
 
+        #region QA Functionality
+
+        [Authorize(Policy = "changeStatus")]
+        [HttpGet("changeStatus")]
+        public async Task<IActionResult> ChangeStatus(string? error)
+        {
+            ViewBag.Permissions = HomeController.Permissions;
+            if(error != null)
+            {
+                ModelState.AddModelError("Message", error);
+                return View();
+            }
+            int testerId = Convert.ToInt32(_contextAccesor.HttpContext?.Request.Cookies["userId"]);
+            if(testerId == 0)
+            {
+                ModelState.AddModelError("Message", "Invalid User!");
+                return View();
+            }
+            ReturnObject<List<RequestViewModel>?> requestResponse = await _qa.GetRequests(testerId);
+            if(!requestResponse.IsSuccess)
+            {
+                ModelState.AddModelError("Message", requestResponse.ErrorMessage != null ? requestResponse.ErrorMessage : "Something Went Wrong Getting Request!");
+                return View();
+            }
+            ViewBag.Requests = requestResponse.Result;
+            return View();
+        }
+
+        [Authorize(Policy = "changeStatus")]
+        [HttpGet("ApproveStatus")]
+        public async Task<IActionResult> ApproveStatus(int requestId, int? subTaskId, string? status)
+        {
+            ReturnObject<SubTask>? statusResponse = await _qa.ChangeStatus(requestId, subTaskId, status);
+            if(statusResponse == null)
+            {
+                return RedirectToAction("ChangeStatus", new { error = "Something Went Wrong Updating The Status!" });
+            }
+            else if(!statusResponse.IsSuccess)
+            {
+                return RedirectToAction("ChangeStatus", new { error = statusResponse.ErrorMessage!=null ? statusResponse.ErrorMessage : "Something Went Wrong Updating The Status!" });
+            }
+            return RedirectToAction("ChangeStatus", "Services");
+        }
+
+        #endregion
+
         #region User Functionality
 
+        [Authorize(Policy = "reqToChangeStatus")]
         [HttpGet("reqToChangeStatus")]
         public async Task<IActionResult> ReqToChangeStatus(int? subId)
         {
@@ -388,6 +454,31 @@ namespace TaskManagementSystem.Controllers
                 ViewBag.UserId = userId;
                 return View();
             }
+        }
+
+        [Authorize(Policy = "reqToChangeStatus")]
+        [HttpPost("reqToChangeStatus")]
+        public async Task<IActionResult> ReqToChangeStatus(StatusRequest model)
+        {
+            ViewBag.Permissions = HomeController.Permissions;
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            ReturnObject<Requests> insertResponse = await _user.PostRequest(model);
+            if(!insertResponse.IsSuccess)
+            {
+                ModelState.AddModelError("Message", insertResponse.ErrorMessage != null ? insertResponse.ErrorMessage : "Something Went Wrong Sending Request!");
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("notifications")]
+        public IActionResult Notifications()
+        {
+            ViewBag.Permissions = HomeController.Permissions;
+            return View();
         }
 
         #endregion

@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Manil Shah\\Work\\TaskManagementSystem\\TaskManagementSystem\\wwwroot\\firebase-messaging-sw.js",
+      "PackagePath": "staticwebassets\\firebase-messaging-sw.js"
+    },
+    {
       "Id": "C:\\Manil Shah\\Work\\TaskManagementSystem\\TaskManagementSystem\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

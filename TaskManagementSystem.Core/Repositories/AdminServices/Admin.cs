@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManagementSystem.Core.DTOs;
@@ -11,15 +14,18 @@ using TaskManagementSystem.Core.ResponseModels;
 using TaskManagementSystem.Data;
 using TaskManagementSystem.Data.DataModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.Extensions.Logging;
 
 namespace TaskManagementSystem.Core.Repositories.AdminServices
 {
     public class Admin : IAdmin
     {
         private readonly ApplicationDbContext _context;
-        public Admin(ApplicationDbContext context)
+        private readonly EmailSettings _emailSettings;
+        public Admin(ApplicationDbContext context, IOptions<EmailSettings> emailSettings)
         {
             _context = context;
+            _emailSettings = emailSettings.Value;
         }
         public async Task<ReturnObject<List<Roles>>> GetRoles()
         {
@@ -51,6 +57,7 @@ namespace TaskManagementSystem.Core.Repositories.AdminServices
                     UserName = model.UserName,
                     Country = "India",
                     Password = model.Password,
+                    Email = model.Email,
                     IsDeleted = 0,
                     CreatedAt = DateTime.Now,
                     RoleId = model.RoleId
@@ -262,6 +269,53 @@ namespace TaskManagementSystem.Core.Repositories.AdminServices
             catch(Exception ex) 
             {
                 return new ReturnObject<List<RoleHasPermissions>>()
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+        public async Task<ReturnObject<string>> SendEmailAsync(string toEmail, string subject, string body)
+        {
+            try
+            {
+                var smtpClient = new SmtpClient(_emailSettings.Host, _emailSettings.Port)
+                {
+                    Credentials = new NetworkCredential(_emailSettings.UserName, _emailSettings.Password),
+                    EnableSsl = _emailSettings.EnableSsl
+                };
+
+                if(_emailSettings.FromEmail == null)
+                 {
+                    return new ReturnObject<string>()
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = "Invalid Sender Email Address"
+                    };
+                }
+                else
+                {
+                    var mailMessage = new MailMessage
+                    {
+                        From = new MailAddress(_emailSettings.FromEmail, _emailSettings.FromName),
+                        Subject = subject,
+                        Body = body,
+                        IsBodyHtml = false
+                    };
+                    mailMessage.To.Add(toEmail);
+                    await smtpClient.SendMailAsync(mailMessage);
+                }
+                return new ReturnObject<string>()
+                {
+                    IsSuccess = true,
+                    Result = body
+                };
+
+            }
+            catch(Exception ex)
+            {
+                return new ReturnObject<string>()
                 {
                     IsSuccess = false,
                     ErrorMessage = ex.Message

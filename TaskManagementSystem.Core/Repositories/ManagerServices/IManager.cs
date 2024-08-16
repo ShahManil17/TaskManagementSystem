@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaskManagementSystem.Core.DTOs;
+﻿using TaskManagementSystem.Core.DTOs;
 using TaskManagementSystem.Core.ResponseModels;
 using TaskManagementSystem.Data.DataModels;
 
@@ -22,5 +17,7 @@ namespace TaskManagementSystem.Core.Repositories.ManagerServices
         public Task<ReturnObject<UserHasTask>> AddUser(int taskId, int? userId);
         public Task<ReturnObject<List<SubTask>>> GetUserHasSubTasks(int id);
         public Task<ReturnObject<string>> GetSubStatus(int? taskId);
+        public Task<ReturnObject<int?>> GetStatusCount(int userId, string status);
+        public Task<ReturnObject<TaskDisplayModel>> GetDesplayDetails(int taskId);
     }
 }

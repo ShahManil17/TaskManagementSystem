@@ -14,5 +14,6 @@ namespace TaskManagementSystem.Core.Repositories.AdminServices
         public Task<ReturnObject<List<Permissions>>> GetPermissions();
         public Task<ReturnObject<List<int>>> GetRoleHasPermissions(int roleId);
         public Task<ReturnObject<List<RoleHasPermissions>>> ChangePermissions(AssignPermissionModel model);
+        public Task<ReturnObject<string>> SendEmailAsync(string toEmail, string subject, string body);
     }
 }

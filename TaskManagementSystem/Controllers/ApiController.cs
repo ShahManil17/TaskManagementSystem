@@ -42,5 +42,52 @@ namespace TaskManagementSystem.Controllers
                 return await _manager.AddUser(taskId, userId);
             }
         }
+
+        [HttpGet("getUserTask")]
+        public async Task<ReturnObject<List<int?>>> GetUserTask(int userId)
+        {
+            try
+            {
+                List<int?> counts = new List<int?>();
+
+                List<string> statuses = new List<string>() { "todo", "in-progress", "bug", "error", "completed" };
+                foreach (var item in statuses)
+                {
+                    ReturnObject<int?> response = await _manager.GetStatusCount(userId, item);
+                    if(response.IsSuccess)
+                    {
+                        counts.Add(response.Result);
+                    }
+                    else
+                    {
+                        return new ReturnObject<List<int?>>()
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = response.ErrorMessage != null ? response.ErrorMessage : "Something Went Wrong Getting the Task Status!"
+                        };
+                    }
+                }
+                return new ReturnObject<List<int?>>()
+                {
+                    IsSuccess = true,
+                    Result = counts
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ReturnObject<List<int?>>()
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+        [HttpGet("getDesplayDetails")]
+        public async Task<ReturnObject<TaskDisplayModel>> GetDesplayDetails(int taskId)
+        {
+            return await _manager.GetDesplayDetails(taskId);
+        }
+
     }
 }

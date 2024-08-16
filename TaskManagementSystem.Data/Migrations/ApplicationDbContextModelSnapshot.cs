@@ -162,6 +162,46 @@ namespace TaskManagementSystem.Data.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
+            modelBuilder.Entity("TaskManagementSystem.Data.DataModels.Requests", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<int?>("AcceptedId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("IsOpen")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RequestedId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RequestedStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SubTaskId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcceptedId");
+
+                    b.HasIndex("RequestedId");
+
+                    b.HasIndex("SubTaskId");
+
+                    b.ToTable("Requests");
+                });
+
             modelBuilder.Entity("TaskManagementSystem.Data.DataModels.RoleHasPermissions", b =>
                 {
                     b.Property<int>("Id")
@@ -483,6 +523,27 @@ namespace TaskManagementSystem.Data.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TaskManagementSystem.Data.DataModels.Requests", b =>
+                {
+                    b.HasOne("TaskManagementSystem.Data.DataModels.Users", "Accepted")
+                        .WithMany()
+                        .HasForeignKey("AcceptedId");
+
+                    b.HasOne("TaskManagementSystem.Data.DataModels.Users", "Requested")
+                        .WithMany()
+                        .HasForeignKey("RequestedId");
+
+                    b.HasOne("TaskManagementSystem.Data.DataModels.SubTask", "SubTask")
+                        .WithMany()
+                        .HasForeignKey("SubTaskId");
+
+                    b.Navigation("Accepted");
+
+                    b.Navigation("Requested");
+
+                    b.Navigation("SubTask");
                 });
 
             modelBuilder.Entity("TaskManagementSystem.Data.DataModels.RoleHasPermissions", b =>

@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "ChangeStatus";
+}
+
+<h1 class="container text-center mt-2 mb-5" style="color:blueviolet">Change Status</h1>
+
+<div asp-validation-summary="All" class="text-danger text-center" role="alert"></div>
+
+<div class="container " style="width:100%; display:flex; flex-wrap: wrap">
+    @if (ViewBag.Requests != null)
+    {
+        foreach (var item in ViewBag.Requests)
+        {
+            <div style="width:400px" class="me-4">
+                <div class="card mt-4">
+                    <div class="card-header" style="font-size:20px">
+                        <b>@item.TaskName</b>
+                    </div>
+                    <div class="w-100 mt-2"><p>Requested For : <b>@item.RequestedStatus</b></p></div>
+                    <div class="card-body d-flex">
+                        <div class="w-50">
+                            <a asp-action="ApproveStatus" asp-controller="Services" asp-route-requestId="@item.Id" asp-route-subTaskId="@item.SubTaskId" asp-route-status="@item.RequestedStatus" class="btn btn-primary">Accept</a>
+                        </div>
+                        <div class="w-50">
+                            <a asp-action="ApproveStatus" asp-controller="Services" asp-route-requestId="@item.Id" class="btn btn-danger">Reject</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

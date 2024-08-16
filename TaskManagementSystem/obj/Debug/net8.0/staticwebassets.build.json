@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "9iLmLi43l3dhdvNsguXB5hsThvlsD2i1AFRb7fhl6X8=",
+  "Hash": "MuZXBAayWlmncwqk/xk+Lw9FbnO0Y9UwCCDKb8qr/Ws=",
   "Source": "TaskManagementSystem",
   "BasePath": "_content/TaskManagementSystem",
   "Mode": "Default",
@@ -91,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Manil Shah\\Work\\TaskManagementSystem\\TaskManagementSystem\\wwwroot\\firebase-messaging-sw.js",
+      "SourceId": "TaskManagementSystem",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Manil Shah\\Work\\TaskManagementSystem\\TaskManagementSystem\\wwwroot\\",
+      "BasePath": "_content/TaskManagementSystem",
+      "RelativePath": "firebase-messaging-sw.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\firebase-messaging-sw.js"
     },
     {
       "Identity": "C:\\Manil Shah\\Work\\TaskManagementSystem\\TaskManagementSystem\\wwwroot\\js\\site.js",

@@ -64,11 +64,11 @@
             <div class="col-md-2 text-center " id="buttons">
                 @if (item.InTask == null)
                 { 
-                    <input type="button" value="ADD" class="btn btn-primary" onclick="add(@item.Id, this)" />
+                    <input type="button" value="ADD" class="btn btn-primary" onclick="add(@item.Id, '@item.UserName', this)" />
                 }
                 else
                 {
-                    <input type="button" value="Remove" class="btn btn-danger" onclick="remove(@item.InTask[0].Id, this)" />
+                    <input type="button" value="Remove" class="btn btn-danger" onclick="remove(@item.InTask[0].Id, '@item.UserName', this)" />
                 }
             </div>
         </div>
@@ -81,29 +81,57 @@
     
 </form>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    async function add(id, element) {
+    async function add(id, userName, element) {
         const url = new URLSearchParams(window.location.search);
         const taskId = url.get('id');
-        let insertResponse = await fetch(`/Api/updateUser?taskId=${taskId}&userId=${id}`);
-        let result = await insertResponse.json();
-        if(!result.isSuccess) {
-            alert(result.errorMessage);
-        }
-        else {
-            element.parentElement.innerHTML = `<input type="button" value="Remove" class="btn btn-danger" onclick="remove(${result.result.id}, this)" />`;
-            alert(`User Added Succesfully`);
-        }
+        console.log(element.parentElement);
+        let addedResult;
+        await Swal.fire({
+            title: `You Sure You Want To Add ${userName}?`,
+            showDenyButton: true,
+            confirmButtonText: "Add",
+            denyButtonText: `Don't Add`
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                let insertResponse = await fetch(`/Api/updateUser?taskId=${taskId}&userId=${id}`);
+                addedResult = await insertResponse.json();
+                console.log(addedResult);
+                if (!addedResult.isSuccess) {
+                    Swal.fire(addedResult.errorMessage, "", "error")
+                }
+                else {
+                    element.parentElement.innerHTML = `<input type="button" value="Remove" class="btn btn-danger" onclick="remove(${addedResult.result.id}, '${userName}', this)" />`;
+                    Swal.fire("Added Successfully!", "", "success");
+                }
+            } else if (result.isDenied) {
+                Swal.fire("Not Added", "", "info");
+            }
+        });
     }
-    async function remove(id, element) {
-        let removeResponse = await fetch(`/Api/updateUser?taskId=${id}`);
-        let result = await removeResponse.json();
-        if (!result.isSuccess) {
-            alert(result.errorMessage);
-        }
-        else {
-            element.parentElement.innerHTML = `<input type="button" value="ADD" class="btn btn-primary" onclick="add(${result.result.userId}, this)" />`;
-            alert(`User Removed Succesfully`);
-        }
+    async function remove(id, userName, element) {
+        console.log(element);
+        let removeResult;
+        await Swal.fire({
+            title: `You Sure You Want To Remove ${userName}?`,
+            showDenyButton: true,
+            confirmButtonText: "Remove",
+            denyButtonText: `Don't Remove`
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                let removeResponse = await fetch(`/Api/updateUser?taskId=${id}`);
+                removeResult = await removeResponse.json();
+                if (!removeResult.isSuccess) {
+                    Swal.fire(removeResult.errorMessage, "", "error")
+                }
+                else {
+                    element.parentElement.innerHTML = `<input type="button" value="ADD" class="btn btn-primary" onclick="add(${removeResult.result.userId}, '${userName}', this)" />`;
+                    Swal.fire("Removed Successfully!", "", "success");
+                }
+            } else if (result.isDenied) {
+                Swal.fire("Not Removed", "", "info");
+            }
+        });
     }
 </script>

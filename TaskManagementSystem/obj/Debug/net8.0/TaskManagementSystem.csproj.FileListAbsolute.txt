@@ -256,3 +256,12 @@ C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\ru
 C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
 C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\FirebaseAdmin.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\Google.Api.Gax.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\Google.Api.Gax.Rest.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\Google.Apis.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\Google.Apis.Auth.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\Google.Apis.Core.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\System.Management.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\taskmanagementsystem-key.json

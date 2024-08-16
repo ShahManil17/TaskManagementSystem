@@ -57,5 +57,6 @@ namespace TaskManagementSystem.Data
         public DbSet<UserHasTask> UserHasTask { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<RefreshTokens> RefreshTokens { get; set; }
+        public DbSet<Requests> Requests { get; set; }
     }
 }

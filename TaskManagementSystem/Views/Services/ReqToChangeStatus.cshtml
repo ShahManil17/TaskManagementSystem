@@ -1,4 +1,5 @@
-﻿
+﻿@model TaskManagementSystem.Core.DTOs.StatusRequest;
+
 @{
     ViewData["Title"] = "ReqToChangeStatus";
 }
@@ -29,13 +30,14 @@
 
 @if (ViewBag.Status != null)
 {
-    <form asp-action="" asp-controller="">
+    <form asp-action="reqToChangeStatus" asp-controller="Services" method="post">
         <input type="hidden" id="subStatus" value="@ViewBag.Status"/>
-        <input type="number" name="subId" id="subId" value="@ViewBag.subId" hidden/>
+        <input asp-for="UserId" id="UserId" hidden />
+        <input asp-for="SubTaskId" id="subId" value="@ViewBag.subId" hidden />
         <div class="row mb-5">
             <div class="col"></div>
             <div class="col">
-                <select name="Status" class="form-control">
+                <select asp-for="RequestStatus" class="form-control">
                     <option value="todo" id="todo">Todo</option>
                     <option value="in-progress" id="in-progress">In-Progress</option>
                     <option value="bug" id="bug">Bug</option>
@@ -52,5 +54,7 @@
 }
 
 <script>
+    const userId = ('; ' + document.cookie).split(`; userId=`).pop().split(';')[0];
+    document.getElementById('UserId').value = Number(userId);
     document.getElementById(`${document.getElementById('subStatus').value}`).selected = true;
 </script>

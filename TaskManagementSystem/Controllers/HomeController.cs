@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using NuGet.Versioning;
 using System.Diagnostics;
 using TaskManagementSystem.Core.DTOs;
 using TaskManagementSystem.Core.Repositories.Logins;

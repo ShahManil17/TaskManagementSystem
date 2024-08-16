@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Text;
+using TaskManagementSystem.Core.DTOs;
 using TaskManagementSystem.Core.Middlewares;
 using TaskManagementSystem.Core.Repositories.AdminServices;
 using TaskManagementSystem.Core.Repositories.Logins;
 using TaskManagementSystem.Core.Repositories.ManagerServices;
+using TaskManagementSystem.Core.Repositories.QAServices;
+using TaskManagementSystem.Core.Repositories.UserServices;
 using TaskManagementSystem.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,6 +56,14 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireClaim("assignUsers");
     });
+    options.AddPolicy("changeStatus", policy =>
+    {
+        policy.RequireClaim("changeStatus");
+    });
+    options.AddPolicy("reqToChangeStatus", policy =>
+    {
+        policy.RequireClaim("reqToChangeStatus");
+    });
 });
 
 // Add services to the container.
@@ -64,6 +74,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<ILogin, TaskManagementSystem.Core.Repositories.Logins.Login>();
 builder.Services.AddTransient<IAdmin, Admin>();
 builder.Services.AddTransient<IManager, Manager>();
+builder.Services.AddTransient<IUser, User>();
+builder.Services.AddTransient<IQA, QA>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("SmtpSettings"));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

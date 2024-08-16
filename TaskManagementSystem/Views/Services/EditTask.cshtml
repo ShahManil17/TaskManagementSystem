@@ -29,10 +29,79 @@
                             <span><b>Has SubTask : </b>Yes</span>
                         }
                     </p>
-                    <a asp-action="editTask" asp-controller="Services" asp-route-id="@item.Id" class="btn btn-primary">Edit Task</a>
+                    <div class="d-flex w-100">
+                        <div class="w-50">
+                            <a asp-action="editTask" asp-controller="Services" asp-route-id="@item.Id" class="btn btn-primary">Edit Task</a>
+                        </div>
+                        <div class="w-50">
+                                <input type="button" class="btn btn-secondary" value="Details" onclick="displayInfo(@item.Id)" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     }
 } 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    let data;
+    async function displayInfo(taskId) {
+        let response = await fetch(`/Api/getDesplayDetails?taskId=${taskId}`);
+        data = await response.json();
+        console.log(data);
+        let htmlString = `<h4 style="margin-bottom:15px"><b>Created By : </b>${data.result.createdByName}</h4><h4 style="margin-bottom:15px"><b>Status : </b>${data.result.status}</h4>`;
+        if(data.result.hasSubTask != 0) {
+            htmlString += `<h4 style="margin-top:15px"><b>Subtasks</b></h4><table style="width:100%; font-size: 20px" cellpadding="8"><tr><th>Name</th><th>Status</th><th>Action</th></tr>`;
+            data.result.subTasks.forEach((ele) => {
+                htmlString += `<tr><td>${ele.name}</td><td>${ele.status}</td><td><input type="button" class="btn btn-primary" onclick="displayUsers(${ele.id})" value="Users" /></td></tr>`
+            });
+            htmlString += `</table>`
+        }
+        else {
+            htmlString += `<input type="button" class="btn btn-primary mt-2" onclick="displayUsers(${data.result.subTasks[0].id})" value="Users"/>`;
+        }
+        Swal.fire({
+            title: `${data.result.taskName}`,
+            html: `${htmlString}`,
+            showClass: {
+                popup: `
+              animate__faster
+            `
+            },
+            hideClass: {
+                popup: `
+              animate__faster
+            `
+            },
+            showCloseButton: true,
+            showConfirmButton: false
+        });
+    }
+    function displayUsers(subTaskId) {
+        data.result.subTasks.forEach((ele) => {
+            if(ele.id == subTaskId) {
+                let userHtml = `<table style="width:100%; font-size: 20px" cellpadding="8"><tr><th>Name</th><th>E-mail</th></tr>`;
+                ele.users.forEach((userEle) => {
+                    userHtml += `<tr><td>${userEle.userName}</td><td>${userEle.email}</td></tr>`;
+                });
+                Swal.fire({
+                    title: `${ele.name}`,
+                    html: `${userHtml}`,
+                    showClass: {
+                        popup: `
+                animate__faster
+            `
+                    },
+                    hideClass: {
+                        popup: `
+                animate__faster
+            `
+                    },
+                    showCloseButton: true,
+                    showConfirmButton: false
+                });
+            }
+        });
+    }
+</script>

@@ -477,5 +477,68 @@ namespace TaskManagementSystem.Core.Repositories.ManagerServices
                 };
             }
         }
+
+        public async Task<ReturnObject<int?>> GetStatusCount(int userId, string status)
+        {
+            try
+            {
+                List<int> data = await _context.Database.SqlQuery<int>($"exec getStatusCount {userId}, {status}")
+                    .ToListAsync();
+                if (data.Any())
+                {
+                    return new ReturnObject<int?>()
+                    {
+                        IsSuccess = true,
+                        Result = data[0]
+                    };
+                }
+                else
+                {
+                    return new ReturnObject<int?>()
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = "Something Went Wrong Getting Status Counts!"
+                    };
+                }
+            }
+            catch(Exception ex)
+            {
+                return new ReturnObject<int?>()
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+        public async Task<ReturnObject<TaskDisplayModel>> GetDesplayDetails(int taskId)
+        {
+            try
+            {
+                List<string>? stringData = await _context.Database.SqlQuery<string>($"exec getDesplayDetails {taskId}").ToListAsync();
+                List<TaskDisplayModel>? data = JsonSerializer.Deserialize<List<TaskDisplayModel>>(stringData.First());
+                if (data == null)
+                {
+                    return new ReturnObject<TaskDisplayModel>()
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = "No Data Found!"
+                    };
+                }
+                return new ReturnObject<TaskDisplayModel>()
+                {
+                    IsSuccess = true,
+                    Result = data[0]
+                };
+            }
+            catch(Exception ex)
+            {
+                return new ReturnObject<TaskDisplayModel>()
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
     }
 }
