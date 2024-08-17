@@ -15,3 +15,4 @@ C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8
 C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.pdb
 C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.genruntimeconfig.cache
 C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\ref\TaskManagementSystem.Core.dll
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem.Core\obj\Debug\net8.0\TaskManagementSystem.Core.sourcelink.json

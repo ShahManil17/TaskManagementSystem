@@ -265,3 +265,4 @@ C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\Go
 C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\System.Management.dll
 C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll
 C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\bin\Debug\net8.0\taskmanagementsystem-key.json
+C:\Manil Shah\Work\TaskManagementSystem\TaskManagementSystem\obj\Debug\net8.0\TaskManagementSystem.sourcelink.json

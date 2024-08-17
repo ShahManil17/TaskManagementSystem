@@ -6,8 +6,27 @@
 <h1 class="container text-center mt-2 mb-4" style="color:blueviolet">Edit Task</h1>
 
 <div asp-validation-summary="All" class="text-danger text-center" role="alert"></div>
+<div class="text-danger text-center mb-2" id="errorContainer"></div>
 
-<div class="container " style="width:100%; display:flex; flex-wrap: wrap">
+<div class="container row">
+    <div class="col-4" style="padding:0 100px">
+        <input type="text" placeholder="Search" id="searchEle" class="form-control text-center" oninput="search()" />
+    </div>
+    <div class="col-4"></div>
+    <div class="col-4" style="padding:0 120px">
+        <select id="filter" class="form-control text-center" onchange="filterTask()">
+            <option selected disabled>-Filter-</option>
+            <option value="todo">Todo</option>
+            <option value="in-progress">In-Progress</option>
+            <option value="bug">Bug</option>
+            <option value="error">Error</option>
+            <option value="completed">Completed</option>
+            <option value="remove" id="removeEle" disabled>Remove Filter</option>
+        </select>
+    </div>
+</div>
+
+<div class="container " style="width:100%; display:flex; flex-wrap: wrap" id="taskContainer">
 @if (ViewBag.AllTasks != null && ViewBag.AllTasks.Count > 0)
 {
     @foreach (var item in ViewBag.AllTasks)
@@ -46,6 +65,16 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     let data;
+    function debounce(callback, delay) {
+        let timer
+        return function () {
+            clearTimeout(timer)
+            timer = setTimeout(() => {
+                callback();
+            }, delay)
+        }
+    }
+
     async function displayInfo(taskId) {
         let response = await fetch(`/Api/getDesplayDetails?taskId=${taskId}`);
         data = await response.json();
@@ -78,6 +107,7 @@
             showConfirmButton: false
         });
     }
+    
     function displayUsers(subTaskId) {
         data.result.subTasks.forEach((ele) => {
             if(ele.id == subTaskId) {
@@ -104,4 +134,97 @@
             }
         });
     }
+
+    async function filterTask() {
+        const status = document.getElementById('filter').value;
+        if (status == 'remove') {
+            window.location.reload();
+            return;
+        }
+        document.getElementById('removeEle').disabled = false;
+        let response = await fetch(`/Api/getFilterTasks?column=status&argument=${status}`);
+        let statusData = await response.json();
+        let htmlString = ``;
+        if (statusData.isSuccess) {
+            document.getElementById('errorContainer').innerHTML = null;
+            statusData.result.forEach((ele) => {
+                htmlString += `<div style="width:400px" class="me-4">
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            ${ele.status}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${ele.taskName}</h5>
+                            <p class="card-text">`;
+                            if (ele.hasSubTask == 0) {
+                                htmlString += `<span><b>Has SubTask : </b>No</span>`;
+                            }
+                            else {
+                                htmlString += `<span><b> Has SubTask: </b>Yes</span>`;
+                            }
+                            htmlString += `</p>
+                            <div class="d-flex w-100">
+                                <div class="w-50">
+                                    <a asp-action="editTask" asp-controller="Services" asp-route-id="${ele.id}" class="btn btn-primary">Edit Task</a>
+                                </div>
+                                <div class="w-50">
+                                        <input type="button" class="btn btn-secondary" value="Details" onclick="displayInfo(${ele.id})" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('taskContainer').innerHTML = htmlString;
+        }
+        else {
+            document.getElementById('errorContainer').innerHTML = statusData.errorMessage;
+        }
+    }
+
+    async function getData() {
+        const name = document.getElementById('searchEle').value;
+        if (name.trim() == '') {
+            window.location.reload();
+        }
+        let taskResponse = await fetch(`/Api/getFilterTasks?column=TaskName&argument=${name}`);
+        let searchData = await taskResponse.json();
+        let htmlString = ``;
+        if (searchData.isSuccess) {
+            document.getElementById('errorContainer').innerHTML = null;
+            searchData.result.forEach((ele) => {
+                htmlString += `<div style="width:400px" class="me-4">
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                ${ele.status}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">${ele.taskName}</h5>
+                                <p class="card-text">`;
+                if (ele.hasSubTask == 0) {
+                    htmlString += `<span><b>Has SubTask : </b>No</span>`;
+                }
+                else {
+                    htmlString += `<span><b> Has SubTask: </b>Yes</span>`;
+                }
+                htmlString += `</p>
+                                <div class="d-flex w-100">
+                                    <div class="w-50">
+                                        <a asp-action="editTask" asp-controller="Services" asp-route-id="${ele.id}" class="btn btn-primary">Edit Task</a>
+                                    </div>
+                                    <div class="w-50">
+                                            <input type="button" class="btn btn-secondary" value="Details" onclick="displayInfo(${ele.id})" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('taskContainer').innerHTML = htmlString;
+        }
+        else {
+            document.getElementById('errorContainer').innerHTML = searchData.errorMessage;
+        }
+    }
+    const search = debounce(getData, 500)
 </script>

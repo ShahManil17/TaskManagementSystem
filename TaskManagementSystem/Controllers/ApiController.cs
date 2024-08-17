@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Host.Mef;
+using System.Collections.Generic;
 using TaskManagementSystem.Core.DTOs;
 using TaskManagementSystem.Core.Repositories.AdminServices;
 using TaskManagementSystem.Core.Repositories.ManagerServices;
@@ -87,6 +89,71 @@ namespace TaskManagementSystem.Controllers
         public async Task<ReturnObject<TaskDisplayModel>> GetDesplayDetails(int taskId)
         {
             return await _manager.GetDesplayDetails(taskId);
+        }
+
+        [HttpGet("getFilterTasks")]
+        public async Task<ReturnObject<List<AddTaskModel>>> GetFilterTasks(string column, string argument)
+        {
+            ReturnObject<List<AddTaskModel>> taskResponse = await _manager.GetAllTasks();
+            if (!taskResponse.IsSuccess)
+            {
+                return taskResponse;
+            }
+            else
+            {
+                if(taskResponse.Result == null || taskResponse.Result.Count  == 0)
+                {
+                    return new ReturnObject<List<AddTaskModel>>()
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = "No Tasks Found!"
+                    };
+                }
+                else if(column == "status")
+                {
+                    List<AddTaskModel> returnResult = taskResponse.Result
+                        .Where(x => x.Status?.ToLower() == argument)
+                        .ToList();
+                    if (returnResult == null || returnResult.Count == 0)
+                    {
+                        return new ReturnObject<List<AddTaskModel>>()
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = $"No Data Found With The Status : {argument}!"
+                        };
+                    }
+                    else
+                    {
+                        return new ReturnObject<List<AddTaskModel>>()
+                        {
+                            IsSuccess = true,
+                            Result = returnResult
+                        };
+                    }
+                }
+                else
+                {
+                    List<AddTaskModel> returnResult = taskResponse.Result
+                        .Where(x => x.TaskName==null ? x.TaskName=="" : x.TaskName.ToLower().Contains(argument))
+                        .ToList();
+                    if (returnResult == null || returnResult.Count == 0)
+                    {
+                        return new ReturnObject<List<AddTaskModel>>()
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = $"No Task Found With The Name : {argument}!"
+                        };
+                    }
+                    else
+                    {
+                        return new ReturnObject<List<AddTaskModel>>()
+                        {
+                            IsSuccess = true,
+                            Result = returnResult
+                        };
+                    }
+                }
+            }
         }
 
     }
